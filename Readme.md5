@@ -1,0 +1,68 @@
+
+=========================
+SSH Web Proxy 
+=========================
+
+Ssh via a http
+
+Provide a web terminal that we can ssh into as a default user and then from there ssh to other nodes with our id 
+
+
+
+
+## Requirements
+
+* Utilize the Docker image or build with Erlang
+
+    Erlang OTP version 24.3.4.10
+    rebar3 3.20.0
+
+
+### Docker Image Build
+
+
+1. Execute docker build
+```sh
+ sudo docker image build --force-rm --compress -t sshproxweb:1.0.1 .
+```
+
+2. Start docker container
+```sh
+sudo docker run -d -it --restart unless-stopped -p 8090:8090 --name sshproxyweb \
+        -v /etc/localtime:/etc/localtime:ro \
+        -v "$PWD/config/sshwebproxy.config:/workdir/config/sshwebproxy.config:ro" \
+        -v "$PWD/config/vm.args:/opt/local/build/sshproxyweb/_rel/wterm_release/releases/1/vm.args:ro" \
+        -v "$PWD/config/sys.config:/opt/local/build/sshproxyweb/_rel/wterm_release/releases/1/sys.config:ro" \
+        -v "$PWD/erl:/workdir/erl:rw" \
+        ${IMAGE_NAME}
+```
+
+
+## Note 
+
+* Modify conf/vm.args and udpate the **-name**
+  e.g -name wterm@your_host_ip
+
+* Add overrides for default configuration file:
+  Modify nd update **config/sshwebproxy.config** with your information
+  * Note make sure the file is readable by uid 4609 or whatever you changed it to if you modifed Dockerfile
+
+
+
+   
+Container runs as sshproxweb(4609)
+ * Modify the Dockerfile if you want to supply a different id
+  
+ * Operation
+   1. Starts a webserver as the sshproxweb uid within the docker container exposing port 8090
+   2. Users can visit the page at http://deployhost:8090
+   3. From there they will be in a ssh session and logged into the host via web browser
+   4. Currently the initial ssh session is opened with a username and password combination.
+      * Todo add support for login via .pem or rsa
+
+
+## Issues
+  * Since certain Ctrl keys are intercepted by the browser directly certain ctrl combinations wont be passed to the 
+    underlying ssh session
+    i.e ctrl-N will open a new browser window instead of been passed down to ssh session at this time
+

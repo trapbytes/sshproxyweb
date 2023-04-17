@@ -1,0 +1,64 @@
+
+$binary = {};
+
+$binary.on = function onbinary(evt, debug, callback)  //
+{
+  if (debug) {
+      console.log("Binary on");
+  }
+  var isBin = Blob.prototype.isPrototypeOf(evt.data);
+  if (debug) {
+      console.log("BloBlob.prototype.isPrototypeOf() == ["+isBin+"]");
+  }
+  if (isBin) {
+      if (debug) {
+          console.log("isBin == (true)");
+      }
+      //var text_data = String.fromCharCode.apply(null, new Uint8Array(evt.data.slice(0, evt.data.size)));
+      //var text_data = String.fromCharCode.apply(null, new Uint8Array(evt.data));
+      //        console.log("RESULT: '" + text_data +"'");
+
+      var reader = new FileReader();
+      reader.addEventListener("loadend", function() {
+          var text_data = String.fromCharCode.apply(null, new Uint8Array(reader.result));
+          if (debug) {
+              console.log("Event-loaded: ");
+              //console.log("RESULT: " + reader.result);
+              console.log("RESULT: '" + text_data +"'");
+          }
+          if (typeof callback === 'function') {
+              //callback(reader.result);
+              callback( text_data );
+          } else {
+              try {
+                  eval( text_data );
+              } catch( e ) {
+                  // swallow syntax error warnings due to eval of buff 
+                  // data results, why syntax ??
+                  if(e instanceof SyntaxError ){ 
+                     //console.log("Error: '" + e + "'");
+                     //console.error(e);
+                  }
+              } 
+          }
+      });
+      //reader.addEventListener("error", function() {
+      //});
+      //reader.readAsText(evt.data.slice(0, evt.data.size));
+      reader.readAsArrayBuffer(evt.data.slice(0, evt.data.size));
+      return {status: "ok"};
+  } else {
+      if (debug) {
+          console.log('Non-binary data');
+          console.dir({EventData: evt});
+      } 
+      if (typeof callback === 'function') { 
+          //callback(reader.result);
+          callback( evt.data );
+      } 
+      //else {
+      // eval(evt.data);
+      //}
+      return {status: "error", desc: "not #binary()" };
+  }
+};

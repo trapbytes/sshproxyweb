@@ -1,0 +1,5 @@
+#
+.erlang.mk/
+erl/_build
+old*
+start.sh

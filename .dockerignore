@@ -1,0 +1,8 @@
+#
+#
+erl/deps/
+erl/_rel/
+erl/_build/
+erl/ebin/
+old/*
+start.sh

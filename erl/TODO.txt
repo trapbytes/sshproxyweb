@@ -1,0 +1,12 @@
+
+
+
+~~ 
+beautify the project 
+  - https cowboy support
+  - pre login screen 
+  - history clip-board 
+  - open multiple in one windo with a session manager 
+
+do login without password being saved in the configuration file
+

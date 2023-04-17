@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+   <title>wTerm</title>
+   <link rel="canonical" href="http://">
+   <meta name="author" content="ENS Software"/>
+   <meta name="Description" content="Web terminal access"/>
+   <meta name="keywords" content="terminal,console,ssh,bash,authentication,server,client"/>
+
+   <link href="/js/xterm/xterm.css" rel="stylesheet"/>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/1.0.0/fetch.min.js"></script>
+   <script src="/js/xterm/xterm.js"></script>
+   <script src="/js/node_modules/xterm-addon-attach/lib/xterm-addon-attach.js"></script>
+   <script src="/js/node_modules/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+   <link href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" rel="stylesheet" type="text/css"/>
+
+   <script src="/js/textencoder.js"></script>
+   <script src="/js/jquery/jquery-3.2.1.min.js"></script>
+   <script src="/js/bert.js"></script>
+   <script src="/js/utf8.js"></script>
+   <script src="/js/binaryo.js"></script>
+   <script src="/js/iwsconnect.js"></script>
+   <script src="/js/wterm/wterm_utils.js"></script>
+   <script>if (window.module) module = window.module;</script>
+ </head>
+ <body>
+  <script>
+   const ws1 = WTERM.UI.utils.conect_ws_internal_msgs_socket('ws://'+location.host+'/ws/');
+   WTERM.UI.userdata.websocket = ws1;
+  </script>
+  <table border="1" cellpadding="2" cellspacing="3" height="90%" width=100%">
+  <tr><td>
+   <div id="term_demo"></div>
+   <script>
+      WTERM.UI.utils.start_terminal('term_demo',WTERM.UI.userdata.websocket);
+      WTERM.UI.utils.pingpong(WTERM.UI.userdata.websocket);
+   </script>
+  </td></tr></table>
+ </body>
+</html>
